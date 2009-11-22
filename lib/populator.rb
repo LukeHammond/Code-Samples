@@ -11,7 +11,7 @@ class Populator
 
   def populate(parser, io)
     parser.parse(io) do |attributes|
-      @records.push Person.new attributes
+      @records.push Person.new(attributes)
     end
   end
 
