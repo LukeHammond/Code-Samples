@@ -7,9 +7,9 @@ class Parser
 
   def parse(io)
     io.each_line do |line|
-      vals = line.strip.split delimeter
+      vals = line.split delimeter
       pair = @layout.zip(vals)
-      attributes =pair.inject({}) do |record, attr_pair|
+      attributes = pair.inject({}) do |record, attr_pair|
         record.merge attr_pair.first => attr_pair.last
       end
       yield attributes

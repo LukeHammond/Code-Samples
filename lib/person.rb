@@ -1,8 +1,9 @@
 class Person < Struct.new(:last_name, :first_name, :gender, :dob, :favorite_color)
 
   def initialize(hash)
+    raise ArgumentError, "#{self.class.name} requires that a hash be provided" unless hash.is_a? Hash
     self.members.each do |attr_name|
-      self.send("#{attr_name}=", hash[attr_name.to_sym])
+      self.send("#{attr_name}=", hash[attr_name.to_sym]) if hash.has_key?(attr_name.to_sym)
     end
   end
   
@@ -16,17 +17,20 @@ class Person < Struct.new(:last_name, :first_name, :gender, :dob, :favorite_colo
   end
 
   def gender= value
-    self[:gender] = case(value)
-    when "M"
-      "Male"
-    when "F"
-      "Female"
-    else
-      value
-    end
+    self[:gender] =
+      case(value)
+        when "M" then "Male"
+        when "F" then "Female"
+        else value
+      end
   end
 
   def dob=(value)
-    self[:dob] = Date.parse(value)
+    self[:dob] = 
+      case value
+        when Date then value
+        when String then value.gsub!('-', '/'); self[:dob] = Date.parse(value)
+        else Date.parse(value)
+      end
   end
 end
